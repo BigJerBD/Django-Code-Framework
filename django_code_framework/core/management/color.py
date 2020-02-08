@@ -6,7 +6,7 @@ import functools
 import os
 import sys
 
-from tusk.utils import termcolors
+from django_code_framework.utils import termcolors
 
 
 def supports_color():
@@ -32,7 +32,7 @@ def make_style(config_string=""):
     """
     Create a Style object from the given config_string.
 
-    If config_string is empty tusk.utils.termcolors.DEFAULT_PALETTE is used.
+    If config_string is empty django_code_framework.utils.termcolors.DEFAULT_PALETTE is used.
     """
 
     style = Style()
@@ -66,8 +66,8 @@ def no_style():
 
 def color_style(force_color=False):
     """
-    Return a Style object from the Tusk color scheme.
+    Return a Style object from the Django-Code-Framework color scheme.
     """
     if not force_color and not supports_color():
         return no_style()
-    return make_style(os.environ.get("TUSK_COLORS", ""))
+    return make_style(os.environ.get("DJANGOCF_COLORS", ""))

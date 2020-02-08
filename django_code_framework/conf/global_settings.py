@@ -1,6 +1,6 @@
 """
-Default Tusk settings. Override these with settings in the module pointed to
-by the TUSK_SETTINGS_MODULE environment variable.
+Default Django-Code-Framework settings. Override these with settings in the module pointed to
+by the DJANGOCF_SETTINGS_MODULE environment variable.
 """
 
 ####################

@@ -1,14 +1,14 @@
 """
 Base classes for writing management commands (named commands which can
-be executed through ``tusk-admin`` or ``manage.py``).
+be executed through ``django_code_framework-admin`` or ``manage.py``).
 """
 import os
 import sys
 from argparse import ArgumentParser, HelpFormatter
 from io import TextIOBase
 
-import tusk
-from tusk.core.management.color import color_style, no_style
+import django_code_framework
+from django_code_framework.core.management.color import color_style, no_style
 
 
 class CommandError(Exception):
@@ -75,12 +75,12 @@ def handle_default_options(options):
     user commands.
     """
     if options.settings:
-        os.environ["TUSK_SETTINGS_MODULE"] = options.settings
+        os.environ["DJANGOCF_SETTINGS_MODULE"] = options.settings
     if options.pythonpath:
         sys.path.insert(0, options.pythonpath)
 
 
-class TuskHelpFormatter(HelpFormatter):
+class HelpFormatter(HelpFormatter):
     """
     Customized formatter so that command-specific arguments appear in the
     --help output before arguments common to all commands.
@@ -161,7 +161,7 @@ class BaseCommand:
     the command-parsing and -execution behavior, the normal flow works
     as follows:
 
-    1. ``tusk-admin`` or ``manage.py`` loads the command class
+    1. ``django_code_framework-admin`` or ``manage.py`` loads the command class
        and calls its ``run_from_argv()`` method.
 
     2. The ``run_from_argv()`` method calls ``create_parser()`` to get
@@ -203,7 +203,7 @@ class BaseCommand:
         migrations on disk don't match the migrations in the database.
 
     ``requires_system_checks``
-        A boolean; if ``True``, entire Tusk project will be checked for errors
+        A boolean; if ``True``, entire Django-Code-Framework project will be checked for errors
         prior to executing the command. Default value is ``True``.
         To validate an individual application's models
         rather than all applications' models, call
@@ -250,11 +250,11 @@ class BaseCommand:
     @staticmethod
     def get_version():
         """
-        Return the Tusk version, which should be correct for all built-in
-        Tusk commands. User-supplied commands can override this method to
+        Return the Django-Code-Framework version, which should be correct for all built-in
+        Django-Code-Framework commands. User-supplied commands can override this method to
         return their own version.
         """
-        return tusk.get_version()
+        return django_code_framework.get_version()
 
     def create_parser(self, prog_name, subcommand, **kwargs):
         """
@@ -264,7 +264,7 @@ class BaseCommand:
         parser = CommandParser(
             prog="%s %s" % (os.path.basename(prog_name), subcommand),
             description=self.help or None,
-            formatter_class=TuskHelpFormatter,
+            formatter_class=HelpFormatter,
             missing_args_message=getattr(self, "missing_args_message", None),
             called_from_command_line=getattr(
                 self, "_called_from_command_line", None
@@ -287,12 +287,12 @@ class BaseCommand:
             help=(
                 "The Python path to a settings module, e.g. "
                 '"myproject.settings.main". If this isn\'t provided, the '
-                "TUSK_SETTINGS_MODULE environment variable will be used."
+                "DJANGOCF_SETTINGS_MODULE environment variable will be used."
             ),
         )
         parser.add_argument(
             "--pythonpath",
-            help='A directory to add to the Python path, e.g. "/home/tuskprojects/myproject".',
+            help='A directory to add to the Python path, e.g. "/home/projects/myproject".',
         )
         parser.add_argument(
             "--traceback",
@@ -335,7 +335,7 @@ class BaseCommand:
     def run_from_argv(self, argv):
         """
         Set up any environment changes requested (e.g., Python path
-        and Tusk settings), then run this command. If the
+        and Django-Code-Framework settings), then run this command. If the
         command raises a ``CommandError``, intercept it and print it sensibly
         to stderr. If the ``--traceback`` option is present or the raised
         ``Exception`` is not ``CommandError``, raise it.

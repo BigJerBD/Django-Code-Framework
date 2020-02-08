@@ -3,8 +3,8 @@ import select
 import sys
 import traceback
 
-from tusk.core.management import BaseCommand, CommandError
-from tusk.utils.datastructures import OrderedSet
+from django_code_framework.core.management import BaseCommand, CommandError
+from django_code_framework.utils.datastructures import OrderedSet
 
 
 class Command(BaseCommand):
@@ -31,7 +31,7 @@ class Command(BaseCommand):
         parser.add_argument(
             "-c",
             "--command",
-            help="Instead of opening an interactive shell, run a command as Tusk and exit.",
+            help="Instead of opening an interactive shell, run a command as Django-Code-Framework and exit.",
         )
 
     @staticmethod

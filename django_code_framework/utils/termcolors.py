@@ -150,7 +150,7 @@ DEFAULT_PALETTE = DARK_PALETTE
 
 
 def parse_color_setting(config_string):
-    """Parse a TUSK_COLORS environment variable to produce the system palette
+    """Parse a DJANGOCF_COLORS environment variable to produce the system palette
 
     The general form of a palette definition is:
 
@@ -158,7 +158,7 @@ def parse_color_setting(config_string):
 
     where:
         palette is a named palette; one of 'light', 'dark', or 'nocolor'.
-        role is a named style used by Tusk
+        role is a named style used by Django-Code-Framework
         fg is a foreground color.
         bg is a background color.
         option is a display options.

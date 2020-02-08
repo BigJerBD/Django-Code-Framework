@@ -2,11 +2,11 @@ import logging
 import logging.config  # needed when logging_config doesn't start with logging.config
 from copy import copy
 
-from tusk.conf import settings
-from tusk.core.management.color import color_style
-from tusk.utils.module_loading import import_string
+from django_code_framework.conf import settings
+from django_code_framework.core.management.color import color_style
+from django_code_framework.utils.module_loading import import_string
 
-# Default logging for Tusk. This sends an email to the site admins on every
+# Default logging for Django-Code-Framework. This sends an email to the site admins on every
 # Depending on DEBUG, all other log records are either sent to
 # the console (DEBUG=True) or discarded (DEBUG=False) by means of the
 # require_debug_true filter.
@@ -14,8 +14,12 @@ DEFAULT_LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "filters": {
-        "require_debug_false": {"()": "tusk.utils.log.RequireDebugFalse"},
-        "require_debug_true": {"()": "tusk.utils.log.RequireDebugTrue"},
+        "require_debug_false": {
+            "()": "django_code_framework.utils.log.RequireDebugFalse"
+        },
+        "require_debug_true": {
+            "()": "django_code_framework.utils.log.RequireDebugTrue"
+        },
     },
     "formatters": {},
     "handlers": {
@@ -25,7 +29,9 @@ DEFAULT_LOGGING = {
             "class": "logging.StreamHandler",
         }
     },
-    "loggers": {"tusk": {"handlers": ["console"], "level": "INFO"}},
+    "loggers": {
+        "django_code_framework": {"handlers": ["console"], "level": "INFO"}
+    },
 }
 
 

@@ -9,17 +9,17 @@ from collections import defaultdict
 from difflib import get_close_matches
 from importlib import import_module
 
-import tusk
-from tusk.apps import apps
-from tusk.conf import settings
-from tusk.core.exceptions import ImproperlyConfigured
-from tusk.core.management.base import (
+import django_code_framework
+from django_code_framework.apps import apps
+from django_code_framework.conf import settings
+from django_code_framework.core.exceptions import ImproperlyConfigured
+from django_code_framework.core.management.base import (
     BaseCommand,
     CommandError,
     CommandParser,
     handle_default_options,
 )
-from tusk.core.management.color import color_style
+from django_code_framework.core.management.color import color_style
 
 
 def find_commands(management_dir):
@@ -50,7 +50,7 @@ def get_commands():
     """
     Return a dictionary mapping command names to their callback applications.
 
-    Look for a management.commands package in tusk.core, and in each
+    Look for a management.commands package in django_code_framework.core, and in each
     installed application -- if a commands package exists, register all
     commands in that package.
 
@@ -68,7 +68,10 @@ def get_commands():
     The dictionary is cached on the first call and reused on subsequent
     calls.
     """
-    commands = {name: "tusk.core" for name in find_commands(__path__[0])}
+    commands = {
+        name: "django_code_framework.core"
+        for name in find_commands(__path__[0])
+    }
 
     if not settings.configured:
         return commands
@@ -98,7 +101,7 @@ def call_command(command_name, *args, **options):
         call_command('shell', plain=True)
         call_command('sqlmigrate', 'myapp')
 
-        from tusk.core.management.commands import flush
+        from django_code_framework.core.management.commands import flush
         cmd = flush.Command()
         call_command(cmd, verbosity=0, interactive=False)
         # Do something with cmd ...
@@ -189,14 +192,14 @@ def call_command(command_name, *args, **options):
 
 class ManagementUtility:
     """
-    Encapsulate the logic of the tusk-admin and manage.py utilities.
+    Encapsulate the logic of the django_code_framework-admin and manage.py utilities.
     """
 
     def __init__(self, argv=None):
         self.argv = argv or sys.argv[:]
         self.prog_name = os.path.basename(self.argv[0])
         if self.prog_name == "__main__.py":
-            self.prog_name = "python -m tusk"
+            self.prog_name = "python -m django_code_framework"
         self.settings_exception = None
 
     def main_help_text(self, commands_only=False):
@@ -213,8 +216,8 @@ class ManagementUtility:
             ]
             commands_dict = defaultdict(lambda: [])
             for name, app in get_commands().items():
-                if app == "tusk.core":
-                    app = "tusk"
+                if app == "django_code_framework.core":
+                    app = "django_code_framework"
                 else:
                     app = app.rpartition(".")[-1]
                 commands_dict[app].append(name)
@@ -228,7 +231,7 @@ class ManagementUtility:
             if self.settings_exception is not None:
                 usage.append(
                     style.NOTICE(
-                        "Note that only Tusk core commands are listed "
+                        "Note that only Django-Code-Framework core commands are listed "
                         "as settings are not properly configured (error: %s)."
                         % self.settings_exception
                     )
@@ -240,14 +243,14 @@ class ManagementUtility:
         """
         Try to fetch the given subcommand, printing a message with the
         appropriate command called from the command line (usually
-        "tusk-admin" or "manage.py") if it can't be found.
+        "django_code_framework-admin" or "manage.py") if it can't be found.
         """
         # Get commands outside of try block to prevent swallowing exceptions
         commands = get_commands()
         try:
             app_name = commands[subcommand]
         except KeyError:
-            if os.environ.get("TUSK_SETTINGS_MODULE"):
+            if os.environ.get("DJANGOCF_SETTINGS_MODULE"):
                 # If `subcommand` is missing due to misconfigured settings, the
                 # following line will retrigger an ImproperlyConfigured exception
                 # (get_commands() swallows the original one) so the user is
@@ -255,7 +258,9 @@ class ManagementUtility:
                 # noinspection PyStatementEffect
                 settings.INSTALLED_APPS
             elif not settings.configured:
-                sys.stderr.write("No Tusk settings specified.\n")
+                sys.stderr.write(
+                    "No Django-Code-Framework settings specified.\n"
+                )
             possible_matches = get_close_matches(subcommand, commands)
             sys.stderr.write("Unknown command: %r" % subcommand)
             if possible_matches:
@@ -291,7 +296,7 @@ class ManagementUtility:
         and formatted as potential completion suggestions.
         """
         # Don't complete if user hasn't sourced bash_completion file.
-        if "TUSK_AUTO_COMPLETE" not in os.environ:
+        if "DJANGOCF_AUTO_COMPLETE" not in os.environ:
             return
 
         cwords = os.environ["COMP_WORDS"].split()[1:]
@@ -373,7 +378,7 @@ class ManagementUtility:
             self.settings_exception = exc
 
         if settings.configured:
-            tusk.setup()
+            django_code_framework.setup()
 
         self.autocomplete()
 
@@ -388,10 +393,10 @@ class ManagementUtility:
                 self.fetch_command(options.args[0]).print_help(
                     self.prog_name, options.args[0]
                 )
-        # Special-cases: We want 'tusk-admin --version' and
-        # 'tusk-admin --help' to work, for backwards compatibility.
+        # Special-cases: We want 'django_code_framework-admin --version' and
+        # 'django_code_framework-admin --help' to work, for backwards compatibility.
         elif subcommand == "version" or self.argv[1:] == ["--version"]:
-            sys.stdout.write(tusk.get_version() + "\n")
+            sys.stdout.write(django_code_framework.get_version() + "\n")
         elif self.argv[1:] in (["--help"], ["-h"]):
             sys.stdout.write(self.main_help_text() + "\n")
         else:

@@ -55,7 +55,7 @@ coverage.xml
 *.mo
 *.pot
 
-# Tusk stuff:
+# Django-Code-Framework stuff:
 *.log
 local_settings.py
 db.sqlite3

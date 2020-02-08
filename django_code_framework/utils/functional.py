@@ -13,7 +13,7 @@ class cached_property:
     A cached property can be made out of an existing method:
     (e.g. ``url = cached_property(get_absolute_url)``).
     The optional ``name`` argument is obsolete as of Python 3.6 and will be
-    deprecated in Tusk 4.0 (#30127).
+    deprecated in Django-Code-Framework 4.0 (#30127).
     """
 
     name = None
@@ -371,7 +371,7 @@ class SimpleLazyObject(LazyObject):
     A lazy object initialized from any function.
 
     Designed for compound objects of unknown type. For builtins or objects of
-    known type, use tusk.utils.functional.lazy.
+    known type, use django_code_framework.utils.functional.lazy.
     """
 
     def __init__(self, func):
@@ -379,7 +379,7 @@ class SimpleLazyObject(LazyObject):
         Pass in a callable that returns the object to be wrapped.
 
         If copies are made of the resulting SimpleLazyObject, which can happen
-        in various circumstances within Tusk, then you must ensure that the
+        in various circumstances within Django-Code-Framework, then you must ensure that the
         callable can be safely run more than once and will return the same
         value.
         """

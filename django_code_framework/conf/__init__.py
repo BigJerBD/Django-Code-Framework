@@ -1,20 +1,20 @@
 """
-Settings and configuration for Tusk.
+Settings and configuration for Django-Code-Framework.
 
-Read values from the module specified by the TUSK_SETTINGS_MODULE environment
-variable, and then from tusk.conf.global_settings; see the global_settings.py
+Read values from the module specified by the DJANGOCF_SETTINGS_MODULE environment
+variable, and then from django_code_framework.conf.global_settings; see the global_settings.py
 for a list of all possible variables.
 """
 
 import importlib
 import os
 import warnings
-import tusk
-from tusk.conf import global_settings
-from tusk.core.exceptions import ImproperlyConfigured
-from tusk.utils.functional import LazyObject, empty
+import django_code_framework
+from django_code_framework.conf import global_settings
+from django_code_framework.core.exceptions import ImproperlyConfigured
+from django_code_framework.utils.functional import LazyObject, empty
 
-ENVIRONMENT_VARIABLE = "TUSK_SETTINGS_MODULE"
+ENVIRONMENT_VARIABLE = "DJANGOCF_SETTINGS_MODULE"
 
 PASSWORD_RESET_TIMEOUT_DAYS_DEPRECATED_MSG = (
     "The PASSWORD_RESET_TIMEOUT_DAYS setting is deprecated. Use "
@@ -38,9 +38,9 @@ class SettingsReference(str):
 
 class LazySettings(LazyObject):
     """
-    A lazy proxy for either global Tusk settings or a custom settings object.
+    A lazy proxy for either global Django-Code-Framework settings or a custom settings object.
     The user can manually configure settings prior to using them. Otherwise,
-    Tusk uses the settings module pointed to by TUSK_SETTINGS_MODULE.
+    Django-Code-Framework uses the settings module pointed to by DJANGOCF_SETTINGS_MODULE.
     """
 
     def _setup(self, name=None):

@@ -1,21 +1,21 @@
 import os
 from importlib import import_module
 
-from tusk.core.exceptions import ImproperlyConfigured
-from tusk.utils.module_loading import module_has_submodule
+from django_code_framework.core.exceptions import ImproperlyConfigured
+from django_code_framework.utils.module_loading import module_has_submodule
 
 MODELS_MODULE_NAME = "models"
 
 
 class AppConfig:
-    """Class representing a Tusk application and its configuration."""
+    """Class representing a Django-Code-Framework application and its configuration."""
 
     def __init__(self, app_name, app_module):
-        # Full Python path to the application e.g. 'tusk.contrib.admin'.
+        # Full Python path to the application e.g. 'django_code_framework.contrib.admin'.
         self.name = app_name
 
-        # Root module for the application e.g. <module 'tusk.contrib.admin'
-        # from 'tusk/contrib/admin/__init__.py'>.
+        # Root module for the application e.g. <module 'django_code_framework.contrib.admin'
+        # from 'django_code_framework/contrib/admin/__init__.py'>.
         self.module = app_module
 
         # Reference to the Apps registry that holds this AppConfig. Set by the
@@ -26,7 +26,7 @@ class AppConfig:
         # subclass, hence the test-and-set pattern.
 
         # Last component of the Python path to the application e.g. 'admin'.
-        # This value must be unique across a Tusk project.
+        # This value must be unique across a Django-Code-Framework project.
         if not hasattr(self, "label"):
             self.label = app_name.rpartition(".")[2]
 
@@ -35,12 +35,12 @@ class AppConfig:
             self.verbose_name = self.label.title()
 
         # Filesystem path to the application directory e.g.
-        # '/path/to/tusk/contrib/admin'.
+        # '/path/to/django_code_framework/contrib/admin'.
         if not hasattr(self, "path"):
             self.path = self._path_from_module(app_module)
 
-        # Module containing models e.g. <module 'tusk.contrib.admin.models'
-        # from 'tusk/contrib/admin/models.py'>. Set by import_models().
+        # Module containing models e.g. <module 'django_code_framework.contrib.admin.models'
+        # from 'django_code_framework/contrib/admin/models.py'>. Set by import_models().
         # None if the application doesn't have a models module.
         self.models_module = None
 
@@ -222,5 +222,5 @@ class AppConfig:
 
     def ready(self):
         """
-        Override this method in subclasses to run code when Tusk starts.
+        Override this method in subclasses to run code when Django-Code-Framework starts.
         """

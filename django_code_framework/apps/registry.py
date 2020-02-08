@@ -5,7 +5,10 @@ import warnings
 from collections import Counter, defaultdict
 from functools import partial
 
-from tusk.core.exceptions import AppRegistryNotReady, ImproperlyConfigured
+from django_code_framework.core.exceptions import (
+    AppRegistryNotReady,
+    ImproperlyConfigured,
+)
 
 from .config import AppConfig
 
@@ -132,7 +135,7 @@ class Apps:
     def check_apps_ready(self):
         """Raise an exception if all apps haven't been imported yet."""
         if not self.apps_ready:
-            from tusk.conf import settings
+            from django_code_framework.conf import settings
 
             # If "not ready" is due to unconfigured settings, accessing
             # INSTALLED_APPS raises a more helpful ImproperlyConfigured
@@ -169,7 +172,7 @@ class Apps:
                     break
             raise LookupError(message)
 
-    # This method is performance-critical at least for Tusk's test suite.
+    # This method is performance-critical at least for Django-Code-Framework's test suite.
     @functools.lru_cache(maxsize=None)
     def get_models(self, include_auto_created=False, include_swapped=False):
         """
@@ -252,7 +255,7 @@ class Apps:
         """
         Check whether an application with this name exists in the registry.
 
-        app_name is the full name of the app e.g. 'tusk.contrib.admin'.
+        app_name is the full name of the app e.g. 'django_code_framework.contrib.admin'.
         """
         self.check_apps_ready()
         return any(ac.name == app_name for ac in self.app_configs.values())
@@ -301,7 +304,7 @@ class Apps:
 
         This method is decorated with lru_cache because it's performance
         critical when it comes to migrations. Since the swappable settings don't
-        change after Tusk has loaded the settings, there is no reason to get
+        change after Django-Code-Framework has loaded the settings, there is no reason to get
         the respective settings attribute over and over again.
         """
         for model in self.get_models(include_swapped=True):
